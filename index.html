@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Alles gute zum Geburtstag</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        .birthday-card {
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            max-width: 550px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 5px solid #ff6b6b;
+        }
+        
+        .card-header {
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #1e3c72;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #ffd166;
+        }
+        
+        .football-icon {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+        
+        .birthday-message {
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        
+        .game-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 3px solid #1e3c72;
+        }
+        
+        .game-title {
+            color: #1e3c72;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .game-instructions {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .difficulty-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        
+        .easy-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .medium-btn {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .hard-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .expert-btn {
+            background: #9C27B0;
+            color: white;
+        }
+        
+        .difficulty-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .difficulty-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px white, 0 0 0 6px currentColor;
+        }
+        
+        .difficulty-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            min-height: 20px;
+        }
+        
+        .field-container {
+            position: relative;
+            height: 300px;
+            background: #2a8c4a;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 4px solid #ffffff;
+            margin-bottom: 20px;
+        }
+        
+        .football-field {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #2a8c4a 25%, #229954 25%, #229954 50%, #2a8c4a 50%, #2a8c4a 75%, #229954 75%);
+            background-size: 40px 40px;
+        }
+        
+        .goal {
+            position: absolute;
+            width: 150px;
+            height: 80px;
+            background: transparent;
+            border: 5px solid white;
+            border-bottom: none;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .goal-net {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 49%, rgba(255,255,255,0.3) 50%, transparent 51%),
+                        linear-gradient(0deg, transparent 49%, rgba(255,255,255,0.3) 50%, transparent 51%);
+            background-size: 20px 20px;
+        }
+        
+        .goalkeeper {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            background: #ff6b6b;
+            border-radius: 50% 50% 40% 40%;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .goalkeeper::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 10px;
+            left: 10px;
+        }
+        
+        .ball {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: white;
+            border-radius: 50%;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            z-index: 3;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        
+        .ball-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, black 40%, black 60%, transparent 60%),
+                        linear-gradient(-45deg, transparent 40%, black 40%, black 60%, transparent 60%);
+            border-radius: 50%;
+        }
+        
+        .target-area {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .target-area:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .score-display {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .game-button {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            font-weight: bold;
+            min-width: 140px;
+        }
+        
+        .game-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
+        }
+        
+        .game-button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .from {
+            font-style: italic;
+            color: #333;
+            margin-top: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .celebration {
+            position: fixed;
+            font-size: 2em;
+            animation: celebration-fly 3s forwards;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        @keyframes celebration-fly {
+            0% { transform: translateY(0) scale(0); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+        
+        .success-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffd166;
+            text-shadow: 3px 3px 0 #1e3c72;
+            animation: bounce 1s infinite alternate;
+            z-index: 10;
+        }
+        
+        @keyframes bounce {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to { transform: translate(-50%, -50%) scale(1.1); }
+        }
+        
+        .field-markings {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+        
+        .penalty-spot {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .shot-trail {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .crowd {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(to top, #4a6572 0%, #344955 100%);
+            display: flex;
+            justify-content: space-around;
+            padding: 5px;
+        }
+        
+        .crowd-person {
+            width: 10px;
+            height: 20px;
+            background: #ffd166;
+            margin: 0 2px;
+            border-radius: 50% 50% 0 0;
+        }
+        
+        .timer-display {
+            font-size: 1.2em;
+            color: #1e3c72;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .difficulty-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: currentColor;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 500px) {
+            .birthday-card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            .birthday-message {
+                font-size: 1.1em;
+            }
+            
+            .field-container {
+                height: 250px;
+            }
+            
+            .difficulty-btn {
+                min-width: 100px;
+                padding: 8px 15px;
+            }
+            
+            .game-button {
+                min-width: 120px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="birthday-card">
+        <div class="card-header">
+            <h1>Alles gute zum Geburtstag</h1>
+            <div class="football-icon">🎂</div>
+            <div class="birthday-message" id="message">
+               Wähle deine Schwierigkeit und versuch so viele Tore wie möglich zu schießen!
+            </div>
+        </div>
+        
+        <div class="game-section">
+            <div class="game-title">Elfer Schießen</div>
+            
+            <div class="difficulty-selector">
+                <button class="difficulty-btn easy-btn active" data-difficulty="easy">⚽ Einfach</button>
+                <button class="difficulty-btn medium-btn" data-difficulty="medium">⚽⚽ Mittel</button>
+                <button class="difficulty-btn hard-btn" data-difficulty="hard">⚽⚽⚽ Schwer</button>
+                <button class="difficulty-btn expert-btn" data-difficulty="expert">⚽⚽⚽⚽ Hart</button>
+            </div>
+            
+            <div class="difficulty-info" id="difficultyInfo">
+                Einfach: Große Bälle, langsamer Torwart.
+            </div>
+            
+            <div class="game-instructions" id="instructions">
+                Wähl die Härte aus und drück auf "START"
+            </div>
+            
+            <div class="score-display">
+                <div>Goals: <span id="score">0</span>/<span id="maxShots">5</span></div>
+                <div>Shots: <span id="shots">0</span>/<span id="shotsMax">5</span></div>
+            </div>
+            
+            <div class="field-container">
+                <div class="difficulty-badge" id="difficultyBadge">Easy</div>
+                <div class="football-field">
+                    <div class="field-markings">
+                        <div class="center-circle"></div>
+                        <div class="penalty-spot"></div>
+                    </div>
+                    <div class="goal">
+                        <div class="goal-net"></div>
+                    </div>
+                    <div class="goalkeeper" id="goalkeeper"></div>
+                    <div class="ball" id="ball">
+                        <div class="ball-pattern"></div>
+                    </div>
+                    <div class="crowd">
+                        <div class="crowd-person"></div>
+                        <div class="crowd-person"></div>
+                        <div class="crowd-person"></div>
+                        <div class="crowd-person"></div>
+                        <div class="crowd-person"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="game-button" id="startButton">"START"</button>
+                <button class="game-button" id="resetButton" disabled>"Spiel zurücksetzen</button>
+            </div>
+        </div>
+        
+        <div class="from" id="from">
+            Leon
+        </div>
+    </div>
+
+    <script>
+        // Customizable variables
+        const friendName = "Vicky";
+        const yourName = "Leon"
+        const customMessage = "Alles gute zum Geburtstag";
+        
+        // Game variables
+        let score = 0;
+        let shotsTaken = 0;
+        let gameActive = false;
+        let ballInMotion = false;
+        let currentDifficulty = 'easy';
+        let goalkeeperInterval;
+        
+        // Difficulty configurations
+        const difficulties = {
+            easy: {
+                name: "Einfach",
+                shots: 5,
+                targetSize: 50,
+                goalkeeperSpeed: 2000,
+                goalkeeperReach: 0.6,
+                targetCount: 5,
+                color: '#4CAF50',
+                description: "Große Bälle, langsamer Torwart"
+            },
+            medium: {
+                name: "Mittel",
+                shots: 5,
+                targetSize: 40,
+                goalkeeperSpeed: 1500,
+                goalkeeperReach: 0.7,
+                targetCount: 5,
+                color: '#FF9800',
+                description: "Kleine Bälle, guter Torwart"
+            },
+            hard: {
+                name: "Schwer",
+                shots: 5,
+                targetSize: 20,
+                goalkeeperSpeed: 1000,
+                goalkeeperReach: 0.8,
+                targetCount: 4,
+                color: '#f44336',
+                description: "Sehr kleine Bälle, sehr guter Torwart"
+            },
+            expert: {
+                name: "Hart",
+                shots: 3,
+                targetSize: 10,
+                goalkeeperSpeed: 1700,
+                goalkeeperReach: 0.9,
+                targetCount: 3,
+                color: '#9C27B0',
+                description: "Ich sag unmöglich"
+            }
+        };
+        
+        // DOM elements
+        const messageEl = document.getElementById('message');
+        const fromEl = document.getElementById('from');
+        const instructionsEl = document.getElementById('instructions');
+        const difficultyInfoEl = document.getElementById('difficultyInfo');
+        const difficultyBadgeEl = document.getElementById('difficultyBadge');
+        const ball = document.getElementById('ball');
+        const goalkeeper = document.getElementById('goalkeeper');
+        const scoreEl = document.getElementById('score');
+        const shotsEl = document.getElementById('shots');
+        const maxShotsEl = document.getElementById('maxShots');
+        const shotsMaxEl = document.getElementById('shotsMax');
+        const startButton = document.getElementById('startButton');
+        const resetButton = document.getElementById('resetButton');
+        const field = document.querySelector('.football-field');
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        
+        // Update the card content
+        messageEl.textContent = `Liebe ${friendName}, ${customMessage}`;
+        fromEl.textContent = `Grüße, ${yourName}`;
+        
+        // Set initial difficulty display
+        updateDifficultyDisplay();
+        
+        // Difficulty selection
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                difficultyBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Set new difficulty
+                currentDifficulty = this.dataset.difficulty;
+                
+                // Update display
+                updateDifficultyDisplay();
+                
+                // Reset game if it was active
+                if (gameActive) {
+                    resetGame();
+                }
+            });
+        });
+        
+        function updateDifficultyDisplay() {
+            const diff = difficulties[currentDifficulty];
+            difficultyInfoEl.textContent = diff.description;
+            difficultyBadgeEl.textContent = diff.name;
+            difficultyBadgeEl.style.color = diff.color;
+            difficultyBadgeEl.style.background = diff.color;
+            
+            maxShotsEl.textContent = diff.shots;
+            shotsMaxEl.textContent = diff.shots;
+            
+            // Update instructions based on difficulty
+            const instructions = {
+                easy: "Perfect for beginners! Big targets and slow goalkeeper.",
+                medium: "Good challenge! Medium targets and average goalkeeper.",
+                hard: "Hard mode! Small targets and fast reactions needed!",
+                expert: "Expert level! Tiny targets and lightning-fast goalkeeper!"
+            };
+            
+            if (!gameActive) {
+                instructionsEl.textContent = `Selected: ${diff.name} - ${instructions[currentDifficulty]}`;
+            }
+        }
+        
+        // Create celebration effect
+        function createCelebration(text, x, y) {
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = text;
+            celebration.style.left = x + 'px';
+            celebration.style.top = y + 'px';
+            celebration.style.color = ['#ff6b6b', '#ffd166', '#1e3c72', '#2a8c4a'][Math.floor(Math.random() * 4)];
+            document.body.appendChild(celebration);
+            
+            setTimeout(() => {
+                celebration.remove();
+            }, 3000);
+        }
+        
+        // Create shot trail effect
+        function createShotTrail(x, y) {
+            const trailCount = currentDifficulty === 'expert' ? 15 : 10;
+            for (let i = 0; i < trailCount; i++) {
+                setTimeout(() => {
+                    const trail = document.createElement('div');
+                    trail.className = 'shot-trail';
+                    trail.style.left = (x - i * 3) + 'px';
+                    trail.style.top = (y - i * 3) + 'px';
+                    field.appendChild(trail);
+                    
+                    setTimeout(() => {
+                        trail.remove();
+                    }, 500);
+                }, i * 30);
+            }
+        }
+        
+        // Move goalkeeper randomly based on difficulty
+        function moveGoalkeeper() {
+            if (!gameActive) return;
+            
+            const diff = difficulties[currentDifficulty];
+            
+            // Different movement patterns based on difficulty
+            let randomPos;
+            if (currentDifficulty === 'easy') {
+                // Easy: limited positions
+                const positions = ['40%', '50%', '60%'];
+                randomPos = positions[Math.floor(Math.random() * positions.length)];
+            } else if (currentDifficulty === 'medium') {
+                // Medium: more positions
+                const positions = ['35%', '45%', '55%', '65%'];
+                randomPos = positions[Math.floor(Math.random() * positions.length)];
+            } else if (currentDifficulty === 'hard') {
+                // Hard: many positions
+                randomPos = (30 + Math.random() * 40) + '%';
+            } else {
+                // Expert: very wide range
+                randomPos = (20 + Math.random() * 60) + '%';
+            }
+            
+            goalkeeper.style.left = randomPos;
+            
+            // Different dive animations based on difficulty
+            const diveChance = {
+                easy: 0.3,
+                medium: 0.5,
+                hard: 0.7,
+                expert: 0.9
+            }[currentDifficulty];
+            
+            if (Math.random() < diveChance) {
+                const diveScale = {
+                    easy: 1.2,
+                    medium: 1.3,
+                    hard: 1.4,
+                    expert: 1.5
+                }[currentDifficulty];
+                
+                goalkeeper.style.transform = `translateX(-50%) scaleX(${diveScale})`;
+                setTimeout(() => {
+                    goalkeeper.style.transform = `translateX(-50%) scaleX(1)`;
+                }, 500);
+            }
+        }
+        
+        // Create targets based on difficulty
+        function createTargets() {
+            // Remove existing targets
+            document.querySelectorAll('.target-area').forEach(target => target.remove());
+            
+            const diff = difficulties[currentDifficulty];
+            
+            // Generate target positions based on difficulty
+            let targetPositions = [];
+            
+            if (currentDifficulty === 'easy') {
+                // Easy: good spread, easy to hit
+                targetPositions = [
+                    {x: 40, y: 25, label: 'Top Left'},
+                    {x: 50, y: 20, label: 'Top Center'},
+                    {x: 60, y: 25, label: 'Top Right'},
+                    {x: 45, y: 35, label: 'Bottom Left'},
+                    {x: 55, y: 35, label: 'Bottom Right'}
+                ];
+            } else if (currentDifficulty === 'medium') {
+                // Medium: tighter spread
+                targetPositions = [
+                    {x: 42, y: 22, label: 'Top Left'},
+                    {x: 50, y: 18, label: 'Top Center'},
+                    {x: 58, y: 22, label: 'Top Right'},
+                    {x: 46, y: 32, label: 'Bottom Left'},
+                    {x: 54, y: 32, label: 'Bottom Right'}
+                ];
+            } else if (currentDifficulty === 'hard') {
+                // Hard: harder to reach positions
+                targetPositions = [
+                    {x: 44, y: 20, label: 'Top Left'},
+                    {x: 50, y: 15, label: 'Top Center'},
+                    {x: 56, y: 20, label: 'Top Right'},
+                    {x: 48, y: 30, label: 'Bottom Center'}
+                ];
+            } else {
+                // Expert: very challenging positions
+                targetPositions = [
+                    {x: 46, y: 18, label: 'Top Left'},
+                    {x: 50, y: 12, label: 'Top Center'},
+                    {x: 54, y: 18, label: 'Top Right'}
+                ];
+            }
+            
+            // Create targets
+            targetPositions.forEach(pos => {
+                const target = document.createElement('div');
+                target.className = 'target-area';
+                target.style.left = pos.x + '%';
+                target.style.top = pos.y + '%';
+                target.style.width = diff.targetSize + 'px';
+                target.style.height = diff.targetSize + 'px';
+                target.textContent = '⚽';
+                target.dataset.x = pos.x;
+                target.dataset.y = pos.y;
+                field.appendChild(target);
+                
+                // Target click event
+                target.addEventListener('click', function() {
+                    if (!gameActive || ballInMotion || shotsTaken >= diff.shots) return;
+                    
+                    ballInMotion = true;
+                    shotsTaken++;
+                    shotsEl.textContent = shotsTaken;
+                    
+                    const targetX = parseInt(this.dataset.x);
+                    const targetY = parseInt(this.dataset.y);
+                    
+                    // Move ball to target with difficulty-based speed
+                    const ballSpeed = {
+                        easy: 800,
+                        medium: 700,
+                        hard: 600,
+                        expert: 500
+                    }[currentDifficulty];
+                    
+                    ball.style.transition = `all ${ballSpeed}ms cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
+                    ball.style.left = targetX + '%';
+                    ball.style.top = targetY + '%';
+                    
+                    // Create shot trail
+                    const ballRect = ball.getBoundingClientRect();
+                    const fieldRect = field.getBoundingClientRect();
+                    const startX = ballRect.left - fieldRect.left + ballRect.width / 2;
+                    const startY = ballRect.top - fieldRect.top + ballRect.height / 2;
+                    createShotTrail(startX, startY);
+                    
+                    // Check if goal is scored
+                    setTimeout(() => {
+                        const goalkeeperRect = goalkeeper.getBoundingClientRect();
+                        const ballFinalRect = ball.getBoundingClientRect();
+                        
+                        // Collision detection with difficulty-based goalkeeper reach
+                        const goalkeeperWidth = goalkeeperRect.width * difficulties[currentDifficulty].goalkeeperReach;
+                        const goalkeeperHeight = goalkeeperRect.height * difficulties[currentDifficulty].goalkeeperReach;
+                        
+                        const collision = !(ballFinalRect.right < goalkeeperRect.left + (goalkeeperRect.width - goalkeeperWidth) / 2 || 
+                                           ballFinalRect.left > goalkeeperRect.right - (goalkeeperRect.width - goalkeeperWidth) / 2 || 
+                                           ballFinalRect.bottom < goalkeeperRect.top + (goalkeeperRect.height - goalkeeperHeight) / 2 || 
+                                           ballFinalRect.top > goalkeeperRect.bottom - (goalkeeperRect.height - goalkeeperHeight) / 2);
+                        
+                        if (!collision && targetY > 10) {
+                            // GOAL SCORED!
+                            score++;
+                            scoreEl.textContent = score;
+                            
+                            // Celebration effects
+                            createCelebration('GOAL!', ballFinalRect.left, ballFinalRect.top);
+                            createCelebration('⚽', ballFinalRect.left + 20, ballFinalRect.top + 20);
+                            createCelebration(['🎉', '🥳', '🔥'][Math.floor(Math.random() * 3)], 
+                                            ballFinalRect.left - 20, ballFinalRect.top - 20);
+                            
+                            // Show success message
+                            const successMsg = document.createElement('div');
+                            successMsg.className = 'success-message';
+                            successMsg.textContent = 'GOAL!';
+                            field.appendChild(successMsg);
+                            
+                            setTimeout(() => {
+                                successMsg.remove();
+                            }, 1000);
+                        } else {
+                            // Goalkeeper saved or missed
+                            const saveMessages = ['SAVED!', 'BLOCKED!', 'DENIED!', 'STOPPED!'];
+                            createCelebration(saveMessages[Math.floor(Math.random() * saveMessages.length)], 
+                                            ballFinalRect.left, ballFinalRect.top);
+                        }
+                        
+                        // Reset ball position
+                        setTimeout(() => {
+                            ball.style.transition = 'all 0.5s ease';
+                            ball.style.left = '50%';
+                            ball.style.top = '85%';
+                            ballInMotion = false;
+                            
+                            // Check if game is over
+                            if (shotsTaken >= diff.shots) {
+                                endGame();
+                            }
+                        }, 1000);
+                    }, ballSpeed);
+                });
+            });
+        }
+        
+        // Start the game
+        function startGame() {
+            if (gameActive) return;
+            
+            gameActive = true;
+            score = 0;
+            shotsTaken = 0;
+            const diff = difficulties[currentDifficulty];
+            
+            scoreEl.textContent = score;
+            shotsEl.textContent = shotsTaken;
+            
+            instructionsEl.textContent = `Playing on ${diff.name} difficulty! Click the ⚽ targets to score!`;
+            instructionsEl.style.fontWeight = 'bold';
+            instructionsEl.style.color = diff.color;
+            
+            // Reset ball position
+            ball.style.left = '50%';
+            ball.style.top = '85%';
+            
+            // Create targets
+            createTargets();
+            
+            // Start goalkeeper movement
+            clearInterval(goalkeeperInterval);
+            goalkeeperInterval = setInterval(() => {
+                if (gameActive) {
+                    moveGoalkeeper();
+                }
+            }, diff.goalkeeperSpeed);
+            
+            // Update buttons
+            startButton.textContent = 'Game Running...';
+            startButton.disabled = true;
+            resetButton.disabled = false;
+            difficultyBtns.forEach(btn => btn.disabled = true);
+        }
+        
+        // End the game
+        function endGame() {
+            gameActive = false;
+            clearInterval(goalkeeperInterval);
+            
+            const diff = difficulties[currentDifficulty];
+            
+            // Remove targets
+            document.querySelectorAll('.target-area').forEach(target => target.remove());
+            
+            // Show final message
+            let resultMessage;
+            const percentage = (score / diff.shots) * 100;
+            
+            if (percentage === 100) {
+                resultMessage = `PERFECT ${score}/${diff.shots}! 🏆 CHAMPION!`;
+                instructionsEl.style.color = '#FFD700';
+                
+                // Big celebration for perfect score
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        createCelebration(['🏆', '⭐', '👑', '💫'][Math.floor(Math.random() * 4)], 
+                                        Math.random() * window.innerWidth, 
+                                        Math.random() * window.innerHeight + 100);
+                    }, i * 150);
+                }
+            } else if (percentage >= 80) {
+                resultMessage = `Excellent! ${score}/${diff.shots} goals! ⭐`;
+                instructionsEl.style.color = '#4CAF50';
+            } else if (percentage >= 60) {
+                resultMessage = `Good job! ${score}/${diff.shots} goals! 👍`;
+                instructionsEl.style.color = '#FF9800';
+            } else if (percentage >= 40) {
+                resultMessage = `Not bad! ${score}/${diff.shots} goals. Keep practicing!`;
+                instructionsEl.style.color = '#FF9800';
+            } else {
+                resultMessage = `${score}/${diff.shots} goals. Practice makes perfect! 💪`;
+                instructionsEl.style.color = '#f44336';
+            }
+            
+            instructionsEl.textContent = resultMessage;
+            
+            // Reset buttons
+            startButton.textContent = 'Play Again';
+            startButton.disabled = false;
+            resetButton.disabled = false;
+            difficultyBtns.forEach(btn => btn.disabled = false);
+        }
+        
+        // Reset the game
+        function resetGame() {
+            gameActive = false;
+            clearInterval(goalkeeperInterval);
+            
+            const diff = difficulties[currentDifficulty];
+            
+            score = 0;
+            shotsTaken = 0;
+            scoreEl.textContent = score;
+            shotsEl.textContent = shotsTaken;
+            
+            // Remove targets
+            document.querySelectorAll('.target-area').forEach(target => target.remove());
+            
+            // Reset instructions
+            instructionsEl.textContent = `Selected: ${diff.name} - Ready to play!`;
+            instructionsEl.style.color = '';
+            instructionsEl.style.fontWeight = '';
+            
+            // Reset ball position
+            ball.style.left = '50%';
+            ball.style.top = '85%';
+            ball.style.transition = 'all 0.5s ease';
+            ballInMotion = false;
+            
+            // Reset goalkeeper position
+            goalkeeper.style.left = '50%';
+            goalkeeper.style.transform = 'translateX(-50%)';
+            
+            // Reset buttons
+            startButton.textContent = 'Start Game';
+            startButton.disabled = false;
+            resetButton.disabled = true;
+            difficultyBtns.forEach(btn => btn.disabled = false);
+        }
+        
+        // Event listeners
+        startButton.addEventListener('click', startGame);
+        resetButton.addEventListener('click', resetGame);
+        
+        // Make the ball bouncy on click
+        ball.addEventListener('click', function() {
+            if (!gameActive || ballInMotion) return;
+            
+            this.style.transform = 'translateX(-50%) scale(1.2)';
+            setTimeout(() => {
+                this.style.transform = 'translateX(-50%) scale(1)';
+            }, 200);
+        });
+        
+        // Add some initial celebration
+        setTimeout(() => {
+            createCelebration('⚽', 100, 100);
+            createCelebration('🎉', 200, 150);
+        }, 1000);
+        
+        // Auto-create some celebrations periodically
+        setInterval(() => {
+            if (Math.random() > 0.7 && !gameActive) {
+                createCelebration(['⚽', '🎉', '🥅'][Math.floor(Math.random() * 3)], 
+                                Math.random() * window.innerWidth, 
+                                window.innerHeight);
+            }
+        }, 4000);
+    </script>
+</body>
+</html>
